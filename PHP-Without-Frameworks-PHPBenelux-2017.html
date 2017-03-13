@@ -1,0 +1,689 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta property="og:locale" content="en_US">
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content="PHP without Frameworks" />
+        <meta property="og:url" content="http://users.telenet.be/patrick_allaert/PHP-Without-Frameworks-PHPBenelux-2017.html" />
+        <meta property="og:description" content="Presentation of 'PHP without Frameworks' by Patrick Allaert at PHPBenelux 2017 (Belgium)." />
+        <meta property="og:site_name" content="Patrick Allaert" />
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="Patrick Allaert slides - PHP without Frameworks">
+        <meta name="twitter:description" content="Presentation of 'PHP without Frameworks' by Patrick Allaert at PHPBenelux 2017 (Belgium).">
+        <meta name="twitter:creator" content="@patrick_allaert">
+        <meta name="twitter:site" content="@patrick_allaert">
+
+        <title>PHP without Frameworks - PHPBenelux 2017 (Belgium)</title>
+
+        <meta name="description" content="Presentation of 'PHP without Frameworks' by Patrick Allaert at PHPBenelux 2017 (Belgium).">
+        <meta name="author" content="Patrick Allaert">
+
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+
+        <link rel="stylesheet" href="css/my.css">
+        <link rel="stylesheet" href="css/theme/league.css" id="theme">
+
+        <script src="js/jquery-3.1.1.min.js"></script>
+
+        <!-- Printing and PDF exports -->
+        <script>
+            var link = document.createElement( 'link' );
+            link.rel = 'stylesheet';
+            link.type = 'text/css';
+            link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+            document.getElementsByTagName( 'head' )[0].appendChild( link );
+        </script>
+
+        <script>
+            if (window.location.protocol != "file:") {
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-2757442-2', 'auto');
+                ga('send', 'pageview');
+            }
+            $(function () {
+                $("body").keypress(
+                        function (e) {
+                            switch (e.keyCode) {
+                                // key "v"
+                                case 118:
+                                    $vid = $("section.present:not(:has(section.present)) video");
+                                    if ($vid.length) {
+                                        if ($vid[0].paused) {
+                                            $vid[0].play();
+                                            $vid[0].webkitRequestFullscreen()
+                                        } else {
+                                            $vid[0].pause();
+                                        }
+                                    }
+                            }
+                        }
+                );
+            });
+        </script>
+
+        <!--[if lt IE 9]>
+        <script src="lib/js/html5shiv.js"></script>
+        <![endif]-->
+
+        <style>
+            .reveal .slides section .fragment.shrink.visible {
+                -webkit-transform: scale(.5);
+                -ms-transform: scale(.5);
+                transform: scale(.5);
+            }
+        </style>
+    </head>
+
+    <body class="php without frameworks phpbenelux" itemscope itemtype="http://schema.org/TechArticle">
+        <meta itemprop="datePublished" content="2017-03-14"/>
+        <meta itemprop="headline" content="Presentation of 'PHP without Frameworks' by Patrick Allaert at PHPBenelux 2017 (Belgium)."/>
+        <div itemprop="publication" itemscope itemtype="http://schema.org/PublicationEvent">
+            <meta itemprop="name" content="PHP without Frameworks"/>
+            <meta itemprop="startDate" content="2017-01-28T14:50:00+01:00"/>
+            <meta itemprop="endDate" content="2017-01-28T15:50:00+01:00"/>
+            <meta itemprop="url" content="https://conference.phpbenelux.eu/2017/sessions/php-without-frameworks/"/>
+            <meta itemprop="duration" content="PT1H"/>
+            <meta itemprop="inLanguage" content="en"/>
+            <div itemprop="superEvent" itemscope itemtype="http://schema.org/EducationEvent">
+                <meta itemprop="name" content="PHPBenelux 2017"/>
+                <meta itemprop="startDate" content="2017-01-28"/>
+                <meta itemprop="endDate" content="2017-01-28"/>
+                <div itemprop="location" itemscope itemtype="http://schema.org/Place">
+                    <meta itemprop="name" content="Hotel Ter Elst"/>
+                    <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+                        <meta itemprop="name" content="Hotel Ter Elst"/>
+                        <meta itemprop="streetAddress" content="Kattenbroek 1, 2650 Edegem"/>
+                        <meta itemprop="addressLocality" content="Edegem, Belgium"/>
+                        <meta itemprop="postalCode" content="B-2650"/>
+                        <meta itemprop="addressCountry" content="Belgium"/>
+                    </div>
+                </div>
+                <div itemprop="organizer" itemscope itemtype="http://schema.org/Organization">
+                    <meta itemprop="name" content="PHPBenelux"/>
+                    <meta itemprop="url" content="https://www.phpbenelux.eu/"/>
+                </div>
+            </div>
+        </div>
+        <div class="reveal">
+            <div class="slides">
+                <section class="first">
+                    <h1 itemprop="name">PHP without Frameworks</h1>
+                </section>
+
+                <section itemprop="author" itemscope itemtype="http://schema.org/Person">
+                    <meta itemprop="email" content="patrickallaert@php.net"/>
+                    <meta itemprop="image" content="https://pbs.twimg.com/profile_images/344513261567775460/348b5193864dc076fac43a9141e36ceb.jpeg"/>
+                    <h2>Hello, I'm <span itemprop="givenName">Patrick</span> <span itemprop="familyName">Allaert</span></h2>
+                    <p><a href="https://twitter.com/patrick_allaert/">@patrick_allaert</a></p>
+                    <ul class="fragment">
+                        <li>Author of the PECL extension: <a href="https://pecl.php.net/package/APM">APM for PHP</a></li>
+                        <li>PHP internals enthusiast</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <!--section>
+                        <h2>Back in time...</h2>
+                        <img class="fragment" src="img/Intel_Pentium_233_MMX.jpg" width="50%"/>
+                        <p class="fragment">233 MHz, almost 300 000 000 instructions/sec!!</p>
+                    </section-->
+                    <section>
+                        <h2>'98: First project on the web</h2>
+                        <ul>
+                            <li>Lyrics website</li>
+                            <li>PHP 3</li>
+                            <li class="fragment shrink" style="font-size: 0.5em;">Microsoft IIS, Microsoft SQL Server, Microsoft Windows</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <pre style="font-size: 0.45em;"><code class="php">&lt;?
+mssql_connect("localhost", "lyrics", "...") or DIE("Cannot connect to db");
+mssql_select_db("lyrics");
+
+$result = mssql_query("SELECT id, title FROM lyrics WHERE artist = " . $artist_id);
+?&gt;
+&lt;TABLE&gt;&lt;TR&gt;&lt;TH&gt;Title&lt;/TH&gt;&lt;/TR&gt;
+&lt;?
+while ($row = mssql_fetch_array($result, MSSQL_ASSOC)) {
+    printf(
+        "&lt;TR&gt;&lt;TD&gt;&lt;A href="view_song.php?id=%s"&gt;%s&lt;/A&gt;&lt;/TD&gt;&lt;/TR&gt;",
+        $row["id"], $row["name"]
+    );
+}
+mssql_free_result($result);
+?&gt;
+&lt;/TABLE&gt;</code></pre>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <img src="img/php-no-frameworks/deviant.png">
+                        <a class="fragment" href="http://www.phpthewrongway.com/">http://www.phpthewrongway.com/</a>
+                    </section>
+                    <section>
+                        <img src="img/php-no-frameworks/rework.png" style="background: none; box-shadow: none;">
+                    </section>
+                    <section>
+                        <pre style="font-size: 0.45em;"><code class="php">namespace AppBundle\Controller;
+
+use Parody\Component\HttpFoundation\Response;
+
+class ArtistController {
+  public function listSongsAction($artistId) {
+    mssql_connect("localhost", "lyrics", "...") or DIE("Cannot connect to db");
+    mssql_select_db("lyrics");
+
+    $result = mssql_query("SELECT id, title FROM lyrics WHERE artist = " . $artistId);
+    $html = "&lt;TABLE&gt;&lt;TR&gt;&lt;TH&gt;Title&lt;/TH&gt;&lt;/TR&gt;";
+    while ($row = mssql_fetch_array($result, MSSQL_ASSOC)) {
+      $html .= "&lt;TR&gt;&lt;TD&gt;&lt;A href="view_song.php?id=$row[id]"&gt;$row[name]&lt;/A&gt;&lt;/TD&gt;&lt;/TR&gt;";
+    }
+    $html .= "</TABLE>";
+    mssql_free_result($result);
+
+    return new Response($html);
+  }
+}</code></pre>
+                    </section>
+                    <section>
+                        <img src="img/php-no-frameworks/approved.png" style="background: none; box-shadow: none;"/>
+                    </section>
+                </section>
+
+                <section>
+                    <section data-background="img/php-no-frameworks/tobeornot2.jpg">
+                        <h2>To framework</h2>
+                        <h2>or not to framework?</h2>
+                    </section>
+
+                    <section>
+                        <video src="vid/wrongquestion2.mp4" preload="auto" controls></video>
+                    </section>
+
+                    <section>
+                        <h2>What is a framework?</h2>
+                        <blockquote class="fragment">#TODO: Put a decent definition here.</blockquote>
+                        <pre class="fragment"><code class="php" style="font-size: 1.3em; text-align: center;">count($frameworkDefinitions) ≅ count($frameworks);</code></pre>
+                    </section>
+
+                    <section>
+                        <h2>Common framework parts:</h2>
+                        <ul>
+                            <li>Libraries/components: avoid reinventing the wheel</li>
+                            <li>Architecture for your application</li>
+                            <li>Coding standards, guidelines, best practices...</li>
+                            <li>Dependency Injection (Container)</li>
+                            <li>Routing</li>
+                            <li>Templating</li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <h2>Framework advertising</h2>
+                        <blockquote class="fragment">"A framework is not absolutely necessary: it is “just” one of the tools that is available to help you develop <strong>better and faster</strong>!"</blockquote>
+                        <blockquote class="fragment">"[...] a framework provides you with the <strong>certainty</strong> that you are developing an application that is in <strong>full compliance</strong>
+                            with the business rules, that is structured, and that is both maintainable and upgradable."</blockquote>
+                    </section>
+
+                    <section>
+                        <h2>Framework advertising</h2>
+                        <blockquote class="fragment"><strong>"Guaranteed upgradability and maintenance"</strong></blockquote>
+                        <blockquote class="fragment">"This is the basic principle of a framework: Not having to reinvent the wheel."</blockquote>
+                    </section>
+                </section>
+
+                <section>
+                    <h2>PHP is unique!</h2>
+
+                    <p class="fragment">From the beginning: designed primarily for <strong>web development</strong>.</p>
+                    <p class="fragment">C/C++, Java, Python, Ruby, ... are all good and proven languages<span class="fragment">, that generally <strong>requires</strong> a web framework for web development.</span></p>
+                </section>
+
+                <section>
+                    <h2>A sample "Twitter-like" PHP 7.1 application</h2>
+
+                    <iframe src="http://sample/" height="500" width="100%"></iframe>
+                </section>
+
+                <section>
+                    <h2>Coding standards</h2>
+
+                    <ul>
+                        <li>Define your standards, it may include existing ones like PSR-*</li>
+                        <li>Use PHP_CodeSniffer to detect violations and create your Sniffs</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <section>
+                        <h2>Routing</h2>
+
+                        <p>A long time ago in a galaxy far far away...:</p>
+                        <ul>
+                            <li class="fragment"><code>/</code> (index.php)</li>
+                            <li class="fragment"><code>/users.php?id=...</code></li>
+                            <li class="fragment"><code>/tweets.php?id=...</code></li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <h2>Typical Apache setup</h2>
+                        <pre><code class="apache">RewriteEngine On
+
+# Serve assets directly
+RewriteRule ^/css/.*\.css - [L]
+RewriteRule ^/js/.*\.js - [L]
+
+# Redirect all requests to a single entry point
+RewriteRule . /index.php</code></pre>
+                    </section>
+
+                    <section>
+                        <h2>Funnel everything to a single <em>Front Controller</em></h2>
+                        <img src="img/php-no-frameworks/funnel.png" width="50%" style="background: none; box-shadow: none; transform: rotate(-0.25turn)">
+                    </section>
+
+                    <section>
+                        <h2><em>Front Controller</em> will route to the right <em>Controller/Action</em></h2>
+
+                        <img class="fragment" src="img/php-no-frameworks/funnel.png" width="50%" style="background: none; box-shadow: none; transform: rotate(0.25turn)">
+                    </section>
+
+                    <section>
+                        <img src="img/php-no-frameworks/traffic.jpg" style="background: none; box-shadow: none;">
+                    </section>
+
+                    <section>
+                        <h2>"No Funnel" Apache setup:</h2>
+
+                        <pre><code class="apache">RewriteEngine On
+
+# http://sample/
+RewriteRule ^/$ /index.php [L]
+
+# http://sample/&lt;user&gt;
+RewriteRule ^/([^/]+)$ /user.php?id=$1 [L]
+
+# http://sample/&lt;user&gt;/status/&lt;tweet&gt;
+RewriteRule ^/([^/]+)/status/([^/]+)$ /tweet.php?user=$1&id=$2 [L]</code></pre>
+                    </section>
+
+                    <section>
+                        <h2>Routing on the HTTP method</h2>
+
+                        <pre><code class="apache">
+# GET http://sample/&lt;user&gt;/status/&lt;tweet&gt;
+RewriteCond %{REQUEST_METHOD} =GET
+RewriteRule ^/([^/]+)/status/([^/]+)$ /tweet_get.php?user=$1&id=$2 [L]
+
+# POST http://sample/&lt;user&gt;/status/&lt;tweet&gt;
+RewriteCond %{REQUEST_METHOD} =POST
+RewriteRule ^/([^/]+)/status/([^/]+)$ /tweet_post.php?user=$1&id=$2 [L]
+
+# DELETE http://sample/&lt;user&gt;/status/&lt;tweet&gt;
+RewriteCond %{REQUEST_METHOD} =DELETE
+RewriteRule ^/([^/]+)/status/([^/]+)$ /tweet_del.php?user=$1&id=$2 [L]
+                        </code></pre>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h2>Bootstrapping</h2>
+
+                        <p class="fragment">PHP has a (little known?) configuration/feature:
+                            <a href="http://php.net/manual/en/ini.core.php#ini.auto-prepend-file"><code class="php">auto_prepend_file</code></a> &amp;
+                            <a href="http://php.net/manual/en/ini.core.php#ini.auto-append-file"><code class="php">auto_append_file</code></a>
+                        </p>
+                    </section>
+
+                    <section>
+                        <h2>"Twitter-like"'s bootstrap</h2>
+
+                        <div class="fragment">
+                            <p>Apache config:</p>
+                            <pre><code class="apache">php_value auto_prepend_file ./../bootstrap.php</code></pre>
+                        </div>
+
+                        <div class="fragment">
+                            <p><code>bootstrap.php</code>:</p>
+                            <pre><code class="php">// PHP configuration?
+//require "php_config.php";
+
+// Let's PSR-4!
+require "autoloader.php";
+
+// Define an error handler?
+//require "error_handler.php";
+
+// Handle authentication?
+//require "authentication.php";
+
+// What you want
+//require "what_you_want.php";</code></pre>
+                        </div>
+                    </section>
+
+                    <section>
+                        <div>
+                            <p><code>autoloader.php</code>:</p>
+                            <pre><code class="php">spl_autoload_register(
+    function ($className)
+    {
+        if (stream_resolve_include_path(
+            $file = (
+                "src/" . str_replace("\\", "/", $className) . ".php")
+            )
+        ) {
+            include $file;
+        }
+    }
+);</code></pre>
+                        </div>
+                    </section>
+
+                    <section>
+                        <pre><code>$ tree src/
+src/
+├── Entity
+│   ├── Tweet.php
+│   └── User.php
+├── Negotiation -> ../vendor/willdurand/negotiation/src/Negotiation/
+├── Service
+│   ├── TweetsService.php
+│   └── UsersService.php
+└── Views
+    ├── Layout.php
+    ├── Tweets
+    │   ├── Listing.php
+    │   └── Page.php
+    └── Users
+        └── Listing.php</code></pre>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h2>Dependency Injection</h2>
+
+                        <p>Let's leverage two features of PHP:</p>
+                        <ul>
+                            <li><code class="php">require</code></li>
+                            <li><code class="php">return</code> statement from <em>included</em> files</li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <h2>Give me the <code>UsersService</code> please!</h2>
+                        <pre class="fragment"><code class="php">$usersService = require "dic/users.php";</code></pre>
+
+                        <div class="fragment">
+                            <p><code>dic/users.php</code></p>
+                            <pre><code class="php">return new Service\UsersService(
+    require "config/db-connection.php"
+);</code></pre>
+                        </div>
+                    </section>
+
+                    <section>
+                        <h2>A more complex DI example</h2>
+                        <pre class="fragment"><code class="php">$deliveryGateway = require "dic/service/delivery-gateway.php";</code></pre>
+
+                        <div class="fragment">
+                            <p><code>dic/service/delivery-gateway.php</code></p>
+                            <pre><code class="php" style="font-size: 0.9em;">&lt;?php
+/**
+ * @return Service\Healthcare\Invoicing\HealthcareDeliveryGatewayInterface
+ */
+return new Service\Healthcare\Invoicing\CachingHealthcareDeliveryGateway(
+    new Service\Healthcare\Invoicing\WSHealthcareDeliveryGateway(
+        require "dic/service/idfformatter.php",
+        require "config/ws-invoicing-hosturi.php",
+        require "dic/service/healthcare.beneficiary.php"
+    ),
+    new Caching()
+);</code></pre>
+                        </div>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h2>Controllers</h2>
+
+                        <p>Grouped under a common directory, those are the only PHP files that can be reached directly.</p>
+
+                        <pre><code>$ tree web
+web
+├── css
+│   └── ...
+├── img
+│   └── ...
+├── index.php
+├── tweet.php
+└── user.php</code></pre>
+
+                    </section>
+                    <section>
+                        <h2><code>web/index.php</code></h2>
+                        <pre><code class="php">$lastJoinedUsers = (require "dic/users.php")->getLastJoined();
+
+(new Views\Layout(
+    "Twitter - Newcomers",
+    new Views\Users\Listing($lastJoinedUsers),
+    true
+))();</code></pre>
+                    </section>
+
+                    <section>
+                        <h2><code>web/index.php</code></h2>
+                        <pre><code class="php">$lastJoinedUsers = (require "dic/users.php")->getLastJoined();
+
+// Serve the right content based on the "Accept" HTTP header
+switch (require "dic/negotiated_format.php") {
+    case "text/html":
+        (new Views\Layout(
+            "Twitter - Newcomers",
+            new Views\Users\Listing($lastJoinedUsers),
+            true
+        ))();
+        return;
+    case "application/json":
+        header("Content-Type: application/json");
+        echo json_encode($lastJoinedUsers);
+        return;
+}
+http_response_code(406);
+                        </code></pre>
+                    </section>
+
+                    <section>
+                        <h2>Some OO swag</h2>
+
+                        <p><code>web/index.php</code></p>
+                        <pre><code class="php">(require "dic/controller.homepage.php")();</code></pre>
+
+                        <p><code>dic/controller.homepage.php</code></p>
+                        <pre><code class="php">return new \Controller\HomePage(
+    require "dic/negotiated_format.php",
+    require "dic/users.php"
+);</code></pre>
+                    </section>
+
+                    <section>
+                        <p><code>\Controller\HomePage</code></p>
+                        <pre style="font-size: 0.4em;"><code class="php">namespace Controller;
+use ...;
+
+class HomePage {
+    protected $mimeType;
+    protected $usersService;
+
+    public function __construct(string $mimeType, UsersService $usersService) {
+        $this->mimeType = $mimeType;
+        $this->usersService = $usersService;
+    }
+
+    public function __invoke(): void {
+        $lastJoinedUsers = $this->usersService->getLastJoined();
+        switch ($this->mimeType) {
+            case "text/html":
+                (new Layout(
+                    "Twitter - Newcomers", new Listing($lastJoinedUsers), true
+                ))();
+                return;
+            case "application/json":
+                header("Content-Type: application/json");
+                echo json_encode($lastJoinedUsers);
+                return;
+        }
+        http_response_code(406);
+    }
+}</code></pre>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h2>Templating</h2>
+
+                        <ul>
+                            <li class="fragment"><code class="php">require()</code> PHP/html files</li>
+                            <li class="fragment">design your own template function helpers (<code class="php">header();footer();menu();</code>)</li>
+                            <li class="fragment">PHP class &amp; <code class="php">__invoke()</code></li>
+                            <li class="fragment">Use a dedicated library?</li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <pre style="font-size: 0.4em;"><code>namespace Views;
+
+class Layout {
+    protected $title;
+    protected $body;
+
+    public function __construct(string $title, callable $body) {
+        $this-&gt;title = $title;
+        $this-&gt;body = $body;
+    }
+
+    public function __invoke() {
+?&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html xmlns="http://www.w3.org/1999/xhtml"&gt;
+&lt;head&gt;
+  &lt;title&gt;&lt;?= htmlspecialchars($this-&gt;title) ?&gt;&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;div class="container"&gt;
+    &lt;div class="row"&gt;
+        &lt;?= ($this-&gt;body)(); ?&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+&lt;?php
+    }
+}
+</code></pre>
+                    </section>
+                </section>
+
+                <section>
+                    <h2>Benchmark?</h2>
+                </section>
+
+                <section>
+                    <h2>LTS?</h2>
+
+                    <p class="fragment">Lines I had to change recently in a PHP 5.1 application made in 2009 to work on a shiny new box with PHP 7.1:</p>
+                    <pre class="fragment"><code class="diff">     &lt;Directory /var/www/&gt;
+-        Order Allow,Deny
+-        Allow from all
++        Require all granted
++        AllowOverride all
+     &lt;/Directory&gt;
+ &lt;/VirtualHost&gt;
+</code></pre>
+                </section>
+
+                <section class="conclusions">
+                    <section>
+                        <h2>Conclusions</h2>
+
+                        <ul>
+                            <li class="fragment">Re-usability of code is achieved with libraries</li>
+                            <li class="fragment">Re-usability of concepts is achieved by following patterns</li>
+                            <li class="fragment">Today's PHP frameworks are not frameworks anymore, they are pre-glued loosy coupled <strong>components</strong> meant to be replaceable</li>
+                            <li class="fragment">"Less is more": Refactor your "framework-based" application to use the most suitable components that fits your needs.
+                                You will gain <strong>control</strong>, <strong>performance</strong> and <strong>maintenance</strong></li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <blockquote>It seems that perfection is attained not when there is nothing more to add, but when there is nothing more to remove.
+                        <br/><br/>Antoine de Saint Exupéry</blockquote>
+                    </section>
+
+                    <section>
+                        <video src="vid/rasmus-frameworks.mp4" preload="auto" controls></video>
+                    </section>
+                </section>
+
+                <section class="questions">
+                    <h2>Questions?</h2>
+                </section>
+
+                <section class="thanks">
+                    <h2>Thanks</h2>
+
+                    <p>"Sample PHP 7.1 application" available at: <a href="https://github.com/patrickallaert/php-sample-application">https://github.com/patrickallaert/php-sample-application</a></p>
+
+                    <p>Don't forget to rate this talk on <a itemprop="discussionUrl" href="https://joind.in/talk/18127">https://joind.in/talk/18127</a></p>
+
+                    <h3>Stay in touch!</h3>
+                    <p><a href="https://twitter.com/patrick_allaert/">@patrick_allaert</a></p>
+                    <p><a href="mailto:patrickallaert@php.net">patrickallaert@php.net</a></p>
+                </section>
+            </div>
+        </div>
+
+        <script src="lib/js/head.min.js"></script>
+        <script src="js/reveal.js"></script>
+
+        <script>
+            // Full list of configuration options available at:
+            // https://github.com/hakimel/reveal.js#configuration
+            Reveal.initialize({
+                controls: false,
+                progress: true,
+                history: true,
+                center: true,
+                transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+                // Optional reveal.js plugins
+                dependencies: [
+                    { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+                    { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+                    { src: 'plugin/zoom-js/zoom.js', async: true },
+                    { src: 'plugin/notes/notes.js', async: true }
+                ]
+            });
+        </script>
+
+    </body>
+</html>
