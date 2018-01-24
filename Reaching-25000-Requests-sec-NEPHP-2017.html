@@ -1,0 +1,954 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta property="og:locale" content="en_US">
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content="Reaching 25 000 requests/sec. (on a laptop)" />
+        <meta property="og:url" content="http://users.telenet.be/patrick_allaert/PHP-Without-Frameworks-PHPSrbija-2017.html" />
+        <meta property="og:description" content="Presentation of 'Reaching 25 000 requests/sec. (on a laptop)' by Patrick Allaert at PHPSrbija 2017 (Belgium)." />
+        <meta property="og:site_name" content="Patrick Allaert" />
+        <meta property="og:image" content="http://users.telenet.be/patrick_allaert/img/php-no-frameworks/thumb.png" />
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:image:src" content="http://users.telenet.be/patrick_allaert/img/php-no-frameworks/thumb.png" />
+        <meta name="twitter:title" content="Patrick Allaert slides - Reaching 25 000 requests/sec. (on a laptop)">
+        <meta name="twitter:description" content="Presentation of 'Reaching 25 000 requests/sec. (on a laptop)' by Patrick Allaert at PHPSrbija 2017 (Belgium).">
+        <meta name="twitter:creator" content="@patrick_allaert">
+        <meta name="twitter:site" content="@patrick_allaert">
+
+        <title>Reaching 25 000 requests/sec. (on a laptop) - PHPSrbija 2017 (Belgium)</title>
+
+        <meta name="description" content="Presentation of 'Reaching 25 000 requests/sec. (on a laptop)' by Patrick Allaert at PHPSrbija 2017 (Belgium).">
+        <meta name="author" content="Patrick Allaert">
+
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+
+        <link rel="stylesheet" href="css/my.css">
+        <link rel="stylesheet" href="css/theme/league.css" id="theme">
+
+        <script src="js/jquery-3.1.1.min.js"></script>
+
+        <!-- Printing and PDF exports -->
+        <script>
+            var link = document.createElement( 'link' );
+            link.rel = 'stylesheet';
+            link.type = 'text/css';
+            link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+            document.getElementsByTagName( 'head' )[0].appendChild( link );
+        </script>
+
+        <script>
+            if (window.location.protocol != "file:") {
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-2757442-2', 'auto');
+                ga('send', 'pageview');
+            }
+            $(function () {
+                $("body").keypress(
+                        function (e) {
+                            switch (e.keyCode) {
+                                // key "v"
+                                case 118:
+                                    $vid = $("section.present:not(:has(section.present)) video");
+                                    if ($vid.length) {
+                                        if ($vid[0].paused) {
+                                            $vid[0].play();
+                                            $vid[0].webkitRequestFullscreen()
+                                        } else {
+                                            $vid[0].pause();
+                                        }
+                                    }
+                            }
+                        }
+                );
+            });
+        </script>
+
+        <!--[if lt IE 9]>
+        <script src="lib/js/html5shiv.js"></script>
+        <![endif]-->
+
+        <style>
+            .reveal .slides section .fragment.shrink.visible {
+                -webkit-transform: scale(.5);
+                -ms-transform: scale(.5);
+                transform: scale(.5);
+            }
+        </style>
+    </head>
+
+    <body class="Reaching 25 000 requests/sec. (on a laptop) phpbenelux" itemscope itemtype="http://schema.org/TechArticle">
+        <meta itemprop="datePublished" content="2017-03-14"/>
+        <meta itemprop="headline" content="Presentation of 'Reaching 25 000 requests/sec. (on a laptop)' by Patrick Allaert at PHPSrbija 2017 (Belgium)."/>
+        <meta itemprop="url" content="http://users.telenet.be/patrick_allaert/PHP-Without-Frameworks-PHPSrbija-2017.html"/>
+        <meta itemprop="image" content="http://users.telenet.be/patrick_allaert/img/php-no-frameworks/thumb.png" />
+        <meta itemprop="thumbnailUrl" content="http://users.telenet.be/patrick_allaert/img/php-no-frameworks/thumb.png" />
+        <div itemprop="publication" itemscope itemtype="http://schema.org/PublicationEvent">
+            <meta itemprop="name" content="Reaching 25 000 requests/sec. (on a laptop)"/>
+            <meta itemprop="startDate" content="2017-01-28T14:50:00+01:00"/>
+            <meta itemprop="endDate" content="2017-01-28T15:50:00+01:00"/>
+            <meta itemprop="url" content="https://conference.phpbenelux.eu/2017/sessions/php-without-frameworks/"/>
+            <meta itemprop="duration" content="PT1H"/>
+            <meta itemprop="inLanguage" content="en"/>
+            <div itemprop="superEvent" itemscope itemtype="http://schema.org/EducationEvent">
+                <meta itemprop="name" content="PHPSrbija 2017"/>
+                <meta itemprop="startDate" content="2017-01-28"/>
+                <meta itemprop="endDate" content="2017-01-28"/>
+                <meta itemprop="url" content="https://conference.phpbenelux.eu/2017/"/>
+                <div itemprop="location" itemscope itemtype="http://schema.org/Place">
+                    <meta itemprop="name" content="Hotel Ter Elst"/>
+                    <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+                        <meta itemprop="name" content="Hotel Ter Elst"/>
+                        <meta itemprop="streetAddress" content="Kattenbroek 1, 2650 Edegem"/>
+                        <meta itemprop="addressLocality" content="Edegem, Belgium"/>
+                        <meta itemprop="postalCode" content="B-2650"/>
+                        <meta itemprop="addressCountry" content="Belgium"/>
+                    </div>
+                </div>
+                <div itemprop="organizer" itemscope itemtype="http://schema.org/Organization">
+                    <meta itemprop="name" content="PHPSrbija"/>
+                    <meta itemprop="url" content="https://www.phpbenelux.eu/"/>
+                </div>
+            </div>
+        </div>
+        <div class="reveal">
+            <div class="slides">
+                <section class="first">
+                    <h1 itemprop="name">Reaching 25 000 requests/sec. (on a laptop)</h1>
+                </section>
+
+                <section>
+                    <h1 itemprop="name">GIY (Glue It Yourself) Framework</h1>
+                </section>
+
+                <section>
+                    <h1 itemprop="name">Tame your libraries</h1>
+                </section>
+
+                <section>
+                    <h1 itemprop="name">PHP without Frameworks</h1>
+                </section>
+
+                <section itemprop="author" itemscope itemtype="http://schema.org/Person">
+                    <meta itemprop="email" content="patrickallaert@php.net"/>
+                    <meta itemprop="image" content="https://pbs.twimg.com/profile_images/344513261567775460/348b5193864dc076fac43a9141e36ceb.jpeg"/>
+                    <h2>Hello, I'm <span itemprop="givenName">Patrick</span> <span itemprop="familyName">Allaert</span></h2>
+                    <p><a href="https://twitter.com/patrick_allaert/">@patrick_allaert</a> / <a href="mailto:patrickallaert@php.net">patrickallaert@php.net</a> </p>
+                    <ul class="fragment">
+                        <li>Author of the PECL extension: <a href="https://pecl.php.net/package/APM">APM for PHP</a></li>
+                        <li>PHP internals enthusiast, RFC voter</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <!--section>
+                        <h2>Back in time...</h2>
+                        <img class="fragment" src="img/Intel_Pentium_233_MMX.jpg" width="50%"/>
+                        <p class="fragment">233 MHz, almost 300 000 000 instructions/sec!!</p>
+                    </section-->
+                    <section>
+                        <h2>'98: First project on the web</h2>
+                        <ul>
+                            <li>Lyrics website</li>
+                            <li>PHP 3</li>
+                            <li class="fragment shrink" style="font-size: 0.5em;">Microsoft IIS, Microsoft SQL Server, Microsoft Windows</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <pre style="font-size: 0.5em;"><code class="php">&lt;?
+mssql_connect("localhost", "lyrics", "...")
+  or DIE("Cannot connect to db");
+mssql_select_db("lyrics");
+
+$result = mssql_query(
+  "SELECT id, title FROM lyrics WHERE artist = $artist_id"
+);
+?&gt; &lt;TABLE&gt;&lt;TR&gt;&lt;TH&gt;Title&lt;/TH&gt;&lt;/TR&gt; &lt;?
+while ($row = mssql_fetch_array($result, MSSQL_ASSOC)) {
+  printf(
+    "&lt;TR&gt;&lt;TD&gt;&lt;A href="view_song.php?id=%s"&gt;%s&lt;/A&gt;&lt;/TD&gt;&lt;/TR&gt;",
+    $row["id"], $row["name"]
+  );
+}
+mssql_free_result($result);
+?&gt;
+&lt;/TABLE&gt;</code></pre>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <img src="img/php-no-frameworks/deviant.png">
+                        <a class="fragment" href="http://www.phpthewrongway.com/">http://www.phpthewrongway.com/</a>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h2>What is a framework?</h2>
+                        <blockquote class="fragment">#TODO: Put a decent definition here.</blockquote>
+                        <pre class="fragment"><code class="php" style="font-size: 1.3em; text-align: center;">count($frameworkDefinitions) ≅ count($frameworks);</code></pre>
+                    </section>
+
+                    <section>
+                        <h2>Framework advertising</h2>
+                        <blockquote class="fragment">"A framework is not absolutely necessary: it is “just” one of the tools that is available to help you develop <strong>better and faster</strong>!"</blockquote>
+                        <blockquote class="fragment">"[...] a framework provides you with the <strong>certainty</strong> that you are developing an application that is in <strong>full compliance</strong>
+                            with the business rules, that is structured, and that is both maintainable and upgradable."</blockquote>
+                    </section>
+
+                    <section>
+                        <h2>Framework advertising</h2>
+                        <blockquote class="fragment"><strong>"Guaranteed upgradability and maintenance"</strong></blockquote>
+                        <blockquote class="fragment">"This is the basic principle of a framework: Not having to reinvent the wheel."</blockquote>
+                    </section>
+
+                    <section>
+                        <pre style="font-size: 0.42em;"><code class="php">&lt;?
+mssql_connect("localhost", "lyrics", "...") or DIE("Cannot connect to db");
+mssql_select_db("lyrics");
+
+$result = mssql_query("SELECT id, title FROM lyrics WHERE artist = $artist_id");
+?&gt;
+&lt;TABLE&gt;&lt;TR&gt;&lt;TH&gt;Title&lt;/TH&gt;&lt;/TR&gt;
+&lt;?
+while ($row = mssql_fetch_array($result, MSSQL_ASSOC)) {
+  printf(
+    "&lt;TR&gt;&lt;TD&gt;&lt;A href="view_song.php?id=%s"&gt;%s&lt;/A&gt;&lt;/TD&gt;&lt;/TR&gt;", $row["id"], $row["name"]
+  );
+}
+mssql_free_result($result);
+?&gt;
+&lt;/TABLE&gt;</code></pre>
+                        <pre class="fragment" data-fragment-index="0" style="font-size: 0.42em;"><code class="php">namespace AppBundle\Controller;
+use Parody\Component\HttpFoundation\Response;
+
+class ArtistController {
+  public function listSongsAction($artistId) {
+    mssql_connect("localhost", "lyrics", "...") or DIE("Cannot connect to db");
+    mssql_select_db("lyrics");
+
+    $result = mssql_query("SELECT id, title FROM lyrics WHERE artist = $artistId");
+    $html = "&lt;TABLE&gt;&lt;TR&gt;&lt;TH&gt;Title&lt;/TH&gt;&lt;/TR&gt;";
+    while ($row = mssql_fetch_array($result, MSSQL_ASSOC)) {
+      $html .= "&lt;TR&gt;&lt;TD&gt;&lt;A href="view_song.php?id=$row[id]"&gt;$row[name]&lt;/A&gt;&lt;/TD&gt;&lt;/TR&gt;";
+    }
+    mssql_free_result($result);
+    $html .= "&lt;/TABLE&gt;";
+
+    return new Response($html);
+  }
+}</code></pre>
+                        <svg class="fragment" data-fragment-index="1" style="height: 100%; width: 100%; position: absolute; left: 0; top: 0;" xmlns="http://www.w3.org/2000/svg">
+                            <line x1="0" y1="0" x2="960" y2="350" stroke-width="10" stroke="red" stroke-dasharray="25, 15"></line>
+                            <line x1="0" y1="350" x2="960" y2="0" stroke-width="10" stroke="red" stroke-dasharray="25, 15"></line>
+                        </svg>
+                        <img class="fragment" data-fragment-index="1" src="img/php-no-frameworks/approved.png" style="background: none; box-shadow: none; position: absolute; top: 50%; left: 35%; width: 30%;"/>
+                    </section>
+
+                    <section>
+
+                    </section>
+
+                    <section data-background="img/php-no-frameworks/tobeornot2.jpg">
+                        <h2>To framework</h2>
+                        <h2>or not to framework?</h2>
+                    </section>
+
+                    <section>
+                        <video src="vid/wrongquestion2.mp4" preload="auto" controls></video>
+                    </section>
+
+                    <section>
+                        <h2>The Framework is your project architecture:</h2>
+                        <ul>
+                            <li class="fragment">Adhere to: Coding standards, guidelines, best practices...</li>
+                            <li class="fragment">Avoid reinventing the wheel: re-use libraries/components (unless you can provide a good reason not to)</li>
+                            <li class="fragment">Handling Request/Response</li>
+                            <li class="fragment">Routing</li>
+                            <li class="fragment">Templating</li>
+                            <li class="fragment">Configuration</li>
+                            <li class="fragment">Dependency Injection (Container)</li>
+                        </ul>
+                    </section>
+                </section>
+
+                <section>
+                    <h2>Coding standards</h2>
+
+                    <ul>
+                        <li>Define your standards, it may include existing ones like <a href="http://www.php-fig.org/psr/">PSR-*</a>,
+                            <a href="http://symfony.com/doc/current/contributing/code/standards.html">Symfony</a>, ...</li>
+                        <li>Use PHP_CodeSniffer to detect and fix violations (and don't hesitate to create your own Sniffs)</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Libraries/components</h2>
+
+                    <ul class="fragment" style="font-size: 0.85em;">
+                        <li>Manage your dependencies:
+                            <ul>
+                                <li class="fragment"><a href="https://getcomposer.org/">Composer</a></li>
+                                <li class="fragment"><a href="https://git-scm.com/docs/git-submodule">git submodule</a> / <a href="https://developer.atlassian.com/blog/2015/05/the-power-of-git-subtree/">git subtree</a></li>
+                            </ul>
+                        </li>
+                        <li class="fragment">Remember:
+                            <ul>
+                                <li class="fragment">The best dependency is the one you can avoid.</li>
+                                <li class="fragment">It is best to reuse existing code than rewriting everything yourself.</li>
+                                <li class="fragment">Too much dependencies can lead to conflicts, poor performances,... <span class="fragment">and this:<br/><img style="display: block; margin-left: auto; margin-right: auto;" width="323" src="img/php-no-frameworks/node_modules.jpg"/></span></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </section>
+
+                <!--section>
+                    <h2>PHP is unique!</h2>
+
+                    <p class="fragment">From the beginning: designed primarily for <strong>web development</strong>.</p>
+                    <p class="fragment">C/C++, Java, Python, Ruby, ... are all good and proven languages<span class="fragment">, that generally <strong>requires</strong> a web framework for web development.</span></p>
+                </section>
+
+                <section>
+                    <h2>A sample "Twitter-like" PHP 7.1 application</h2>
+
+                    <iframe src="http://sample/" height="500" width="100%"></iframe>
+                </section-->
+
+                <section>
+                    <section>
+                        <h2>Request/Response</h2>
+
+                        <p>PHP Libraries:</p>
+                        <ul class="fragment">
+                            <li>Symfony HTTP Foundation</li>
+                            <li>Zend\Http</li>
+                            <li>react/http</li>
+                            <li>illuminate/http</li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <h2>Request/Response</h2>
+
+                        <p>... or using native PHP features:</p>
+                        <div style="font-size: 0.7em;">
+                            <p>
+                                <a href="http://php.net/manual/en/reserved.variables.get.php">$_​GET</a>,
+                                <a href="http://php.net/manual/en/reserved.variables.post.php">$_​POST</a>,
+                                <a href="http://php.net/manual/en/reserved.variables.request.php">$_​REQUEST</a>,
+                                <a href="http://php.net/manual/en/reserved.variables.files.php">$_​FILES</a>,
+                                <a href="http://php.net/manual/en/reserved.variables.session.php">$_​SESSION</a>,
+                                <a href="http://php.net/manual/en/reserved.variables.server.php">$_​SERVER</a>,
+                                <a href="http://php.net/manual/en/reserved.variables.environment.php">$_​ENV</a>,
+                                <a href="http://php.net/manual/en/reserved.variables.cookies.php">$_​COOKIE</a>
+                            </p>
+                        </div>
+                        <div>
+                            <ul>
+                                <li class="fragment">They are not just simple global variables!</li>
+                                <li class="fragment">Their are lazy loaded: only created upon first usage</li>
+                                <li class="fragment">SAPIs hides all the complexity and provide a common interface, whatever the SAPI you use:<br/>
+                                    <span style="font-size: 0.7em">aolserver, apache, apache2filter, apache2handler, caudium, cgi, cgi-fcgi, cli, cli-server, continuity, embed, fpm-fcgi,
+                                    isapi, litespeed, milter, nsapi, phttpd, pi3web, roxen, thttpd, tux, webjames</span></li>
+                                <li class="fragment">Available since PHP 4.1 (2001) :-)</li>
+                            </ul>
+                        </div>
+                    </section>
+
+                    <section>
+                        <h2>Request/Response</h2>
+
+                        <p>... or using native PHP features:</p>
+                        <div style="font-size: 0.6em;">
+                            <p>
+                                <a href="http://php.net/echo">echo</a>
+                                <a href="http://php.net/print">print()</a>
+                                <a href="http://php.net/printf">printf()</a>
+                            </p>
+                            <p>
+                                <a href="http://php.net/json_​decode">json_​decode()</a>
+                                <a href="http://php.net/json_​encode">json_​encode()</a>
+                            </p>
+                            <p>
+                                <a href="http://php.net/header_​register_​callback">header_​register_​callback()</a>
+                                <a href="http://php.net/header_​remove">header_​remove()</a>
+                                <a href="http://php.net/header">header()</a>
+                                <a href="http://php.net/headers_​list">headers_​list()</a>
+                                <a href="http://php.net/headers_​sent">headers_​sent()</a>
+                                <a href="http://php.net/http_​response_​code">http_​response_​code()</a>
+                            </p>
+                            <p>
+                                <a href="http://php.net/setcookie">setcookie()</a>
+                                <a href="http://php.net/setrawcookie">setrawcookie()</a>
+                            </p>
+                            <p>
+                                <a href="http://php.net/htmlentities">htmlentities()</a>
+                                <a href="http://php.net/html_entity_decode">html_entity_decode()</a>
+                                <a href="http://php.net/htmlspecialchars">htmlspecialchars()</a>
+                                <a href="http://php.net/nl2br">nl2br()</a>
+                                <a href="http://php.net/urlencode">urlencode()</a>
+                                <a href="http://php.net/wordwrap">wordwrap()</a>
+                            </p>
+                            <p>
+                                <a href="http://php.net/flush">flush()</a>
+                                <a href="http://php.net/ob_​clean">ob_​clean()</a>
+                                <a href="http://php.net/ob_​end_​clean">ob_​end_​clean()</a>
+                                <a href="http://php.net/ob_​end_​flush">ob_​end_​flush()</a>
+                                <a href="http://php.net/ob_​flush">ob_​flush()</a>
+                                <a href="http://php.net/ob_​get_​clean">ob_​get_​clean()</a>
+                                <a href="http://php.net/ob_​get_​contents">ob_​get_​contents()</a>
+                                <a href="http://php.net/ob_​get_​flush">ob_​get_​flush()</a>
+                                <a href="http://php.net/ob_​get_​length">ob_​get_​length()</a>
+                                <a href="http://php.net/ob_​get_​level">ob_​get_​level()</a>
+                                <a href="http://php.net/ob_​get_​status">ob_​get_​status()</a>
+                                <a href="http://php.net/ob_​gzhandler">ob_​gzhandler()</a>
+                                <a href="http://php.net/ob_​implicit_​flush">ob_​implicit_​flush()</a>
+                                <a href="http://php.net/ob_​list_​handlers">ob_​list_​handlers()</a>
+                                <a href="http://php.net/ob_​start">ob_​start()</a>
+                            </p>
+                            <p>
+                                <a href="http://php.net/output_​add_​rewrite_​var">output_​add_​rewrite_​var()</a>
+                                <a href="http://php.net/output_​reset_​rewrite_​vars">output_​reset_​rewrite_​vars()</a>
+                            </p>
+                            <p>
+                                <a href="http://php.net/manual/en/wrappers.php.php">php://input</a>
+                                <a href="http://php.net/manual/en/wrappers.php.php">php://output</a>
+                                ...
+                            </p>
+                        </div>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h2>Routing</h2>
+
+                        <p>PHP Libraries:</p>
+                        <ul class="fragment">
+                            <li>symfony/routing</li>
+                            <li>illuminate/routing</li>
+                            <li>zendframework/zend-router</li>
+                            <li>nikic/fast-route</li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <h2>Routing</h2>
+                        <h3>Typical Apache setup</h3>
+                        <pre><code class="apache">RewriteEngine On
+
+# Serve assets directly
+RewriteRule ^/css/.*\.css - [L]
+RewriteRule ^/js/.*\.js - [L]
+
+# Redirect all requests to a single entry point
+RewriteRule . /index.php</code></pre>
+                    </section>
+
+                    <section>
+                        <h2>Routing</h2>
+                        <h3>Funnel everything to a single <em>Front Controller</em></h3>
+                        <img src="img/php-no-frameworks/funnel.png" width="50%" style="background: none; box-shadow: none; transform: rotate(-0.25turn)">
+                    </section>
+
+                    <section>
+                        <h2>Routing</h2>
+                        <h3><em>Front Controller</em> will route to the right <em>Controller/Action</em></h3>
+
+                        <img src="img/php-no-frameworks/funnel.png" width="50%" style="background: none; box-shadow: none; transform: rotate(0.25turn)">
+                    </section>
+
+                    <section>
+                        <h2>Routing</h2>
+                        <img src="img/php-no-frameworks/traffic.jpg" style="background: none; box-shadow: none;">
+                    </section>
+
+                    <section>
+                        <h2>Routing</h2>
+                        <h3>Apache setup with multiple front controllers:</h3>
+
+                        <pre><code class="apache">RewriteEngine On
+
+# http://sample/
+RewriteRule ^/$ /index.php [L]
+
+# http://sample/&lt;user&gt;
+RewriteRule ^/([^/]+)$ /user.php?id=$1 [L]
+
+# http://sample/&lt;user&gt;/status/&lt;tweet&gt;
+RewriteRule ^/([^/]+)/status/([^/]+)$ /tweet.php?user=$1&id=$2 [L]</code></pre>
+                    </section>
+
+                    <section>
+                        <h2>Routing on the HTTP method</h2>
+
+                        <pre><code class="apache">
+# GET http://sample/&lt;user&gt;/status/&lt;tweet&gt;
+RewriteCond %{REQUEST_METHOD} =GET
+RewriteRule ^/([^/]+)/status/([^/]+)$ /tweet_get.php?user=$1&id=$2 [L]
+
+# POST http://sample/&lt;user&gt;/status/&lt;tweet&gt;
+RewriteCond %{REQUEST_METHOD} =POST
+RewriteRule ^/([^/]+)/status/([^/]+)$ /tweet_post.php?user=$1&id=$2 [L]
+
+# DELETE http://sample/&lt;user&gt;/status/&lt;tweet&gt;
+RewriteCond %{REQUEST_METHOD} =DELETE
+RewriteRule ^/([^/]+)/status/([^/]+)$ /tweet_del.php?user=$1&id=$2 [L]
+                        </code></pre>
+                    </section>
+
+                    <section>
+                        <h2>Controllers</h2>
+
+                        <p>Grouped under a common directory, those are the only PHP files that can be reached directly.</p>
+
+                        <pre><code>$ tree web
+web
+├── css
+│   └── ...
+├── img
+│   └── ...
+├── index.php
+├── tweet.php
+└── user.php</code></pre>
+
+                    </section>
+                    <section>
+                        <h2><code>web/index.php</code></h2>
+                        <pre><code class="php">$lastJoinedUsers = (require "dic/users.php")->getLastJoined();
+
+(new Views\Layout(
+    "Twitter - Newcomers",
+    new Views\Users\Listing($lastJoinedUsers),
+    true
+))();</code></pre>
+                    </section>
+
+                    <section>
+                        <h2><code>web/index.php</code></h2>
+                        <pre><code class="php">$lastJoinedUsers = (require "dic/users.php")->getLastJoined();
+
+// Serve the right content based on the "Accept" HTTP header
+switch (require "dic/negotiated_format.php") {
+    case "text/html":
+        (new Views\Layout(
+            "Twitter - Newcomers",
+            new Views\Users\Listing($lastJoinedUsers),
+            true
+        ))();
+        return;
+    case "application/json":
+        header("Content-Type: application/json");
+        echo json_encode($lastJoinedUsers);
+        return;
+}
+http_response_code(406);
+                    </code></pre>
+                    </section>
+
+                    <section>
+                        <h2>Some OO swag</h2>
+
+                        <p><code>web/index.php</code></p>
+                        <pre><code class="php">(require "dic/controller.homepage.php")();</code></pre>
+
+                        <p><code>dic/controller.homepage.php</code></p>
+                        <pre><code class="php">return new \Controller\HomePage(
+    require "dic/negotiated_format.php",
+    require "dic/users.php"
+);</code></pre>
+                    </section>
+
+                    <section>
+                        <p><code>\Controller\HomePage</code></p>
+                        <pre style="font-size: 0.4em;"><code class="php">namespace Controller;
+use ...;
+
+class HomePage {
+    protected $mimeType;
+    protected $usersService;
+
+    public function __construct(string $mimeType, UsersService $usersService) {
+        $this->mimeType = $mimeType;
+        $this->usersService = $usersService;
+    }
+
+    public function __invoke(): void {
+        $lastJoinedUsers = $this->usersService->getLastJoined();
+        switch ($this->mimeType) {
+            case "text/html":
+                (new Layout(
+                    "Twitter - Newcomers", new Listing($lastJoinedUsers), true
+                ))();
+                return;
+            case "application/json":
+                header("Content-Type: application/json");
+                echo json_encode($lastJoinedUsers);
+                return;
+        }
+        http_response_code(406);
+    }
+}</code></pre>
+                    </section>
+
+
+                    <section>
+                        <h2>Bootstrapping</h2>
+
+                        <p class="fragment">PHP has a (little known?) configuration/feature:
+                            <a href="http://php.net/manual/en/ini.core.php#ini.auto-prepend-file"><code class="php">auto_prepend_file</code></a> &amp;
+                            <a href="http://php.net/manual/en/ini.core.php#ini.auto-append-file"><code class="php">auto_append_file</code></a>
+                        </p>
+                    </section>
+
+                    <section>
+                        <h2>Bootstrapping</h2>
+
+                        <div class="fragment">
+                            <p>Apache config:</p>
+                            <pre><code class="apache">php_value auto_prepend_file ./../bootstrap.php</code></pre>
+                        </div>
+
+                        <div class="fragment">
+                            <p><code>bootstrap.php</code>:</p>
+                            <pre><code class="php">// PHP configuration?
+//require "php_config.php";
+
+// Let's PSR-4!
+require "autoloader.php";
+
+// Define an error handler?
+//require "error_handler.php";
+
+// Handle authentication?
+//require "authentication.php";
+
+// What you want
+//require "what_you_want.php";</code></pre>
+                        </div>
+                    </section>
+
+                    <!--section>
+                        <div>
+                            <p><code>autoloader.php</code>:</p>
+                            <pre><code class="php">spl_autoload_register(
+    function ($className)
+    {
+        if (stream_resolve_include_path(
+            $file = (
+                "src/" . str_replace("\\", "/", $className) . ".php")
+            )
+        ) {
+            include $file;
+        }
+    }
+);</code></pre>
+                        </div>
+                    </section>
+
+                    <section>
+                        <pre><code>$ tree src/
+src/
+├── Entity
+│   ├── Tweet.php
+│   └── User.php
+├── Negotiation -> ../vendor/willdurand/negotiation/src/Negotiation/
+├── Service
+│   ├── TweetsService.php
+│   └── UsersService.php
+└── Views
+    ├── Layout.php
+    ├── Tweets
+    │   ├── Listing.php
+    │   └── Page.php
+    └── Users
+        └── Listing.php</code></pre>
+                    </section-->
+                </section>
+
+                <section>
+                    <section>
+                        <h2>Templating</h2>
+
+                        <p>PHP Libraries:</p>
+                        <ul class="fragment">
+                            <li>Twig</li>
+                            <li>Zeta Components template</li>
+                            <li>Eden-PHP/Template</li>
+                            <li>Smarty</li>
+                        </ul>
+
+                    </section>
+
+                    <section>
+                        <h2>Templating</h2>
+                        <p>... or using native PHP features:</p>
+                        <ul>
+                            <li class="fragment"><code class="php">require()</code> PHP/html files</li>
+                            <li class="fragment">design your own template function helpers (<code class="php">page_header();page_footer();menu();</code>)</li>
+                            <li class="fragment">PHP class &amp; <code class="php">__invoke()</code></li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <pre style="font-size: 0.4em;"><code>namespace Views;
+
+class Layout {
+    protected $title;
+    protected $body;
+
+    public function __construct(string $title, callable $body) {
+        $this-&gt;title = $title;
+        $this-&gt;body = $body;
+    }
+
+    public function __invoke() {
+?&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html xmlns="http://www.w3.org/1999/xhtml"&gt;
+&lt;head&gt;
+  &lt;title&gt;&lt;?= htmlspecialchars($this-&gt;title) ?&gt;&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;div class="container"&gt;
+    &lt;div class="row"&gt;
+        &lt;?= ($this-&gt;body)(); ?&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+&lt;?php
+    }
+}
+</code></pre>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h2>Configuration</h2>
+
+                        <p>PHP Libraries:</p>
+
+                        <ul class="fragment">
+                            <li>Symfony config</li>
+                            <li>Zeta Components Configuration</li>
+                            <li>illuminate/config</li>
+                            <li>packaged/config</li>
+                            <li>werx/config</li>
+                            <li>PECL/yaconf</li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <h2>Configuration</h2>
+                        <p>... or using native Apache features to inject environment variables (♥ 12factor.net):</p>
+
+                        <pre class="fragment"><code class="apache">PassEnv JAVA_HOME
+SetEnv DB_CONNECTION mysql:host=localhost;dbname=sample
+SetEnv DB_USER sampleuser
+SetEnv DB_PASS samplepass</code></pre>
+
+                    </section>
+
+                    <section>
+                        <h2>Configuration</h2>
+                        <p>... or using native PHP features:</p>
+
+                        <ul>
+                            <li class="fragment"><a href="http://php.net/parse_ini_file">parse_ini_file()</a></li>
+                            <li class="fragment">PHP associative array</li>
+                        </ul>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h2>Dependency Injection</h2>
+
+                        <p>PHP Libraries:</p>
+
+                        <ul class="fragment">
+                            <li>bitExpert/disco</li>
+                            <li>League container</li>
+                            <li>Symfony DependencyInjection</li>
+                            <li>Pimple</li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <h2>Dependency Injection</h2>
+                        <p>... or using native PHP features:</p>
+
+                        <ul>
+                            <li class="fragment">Hierarchy of .php files: <code class="php">require</code> + <code class="php">return</code> statement from <em>included</em> files</li>
+                            <li class="fragment">List of global functions</li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <h2>Dependency Injection</h2>
+                        <h3>Give me the <code>UsersService</code> please!</h3>
+                        <pre class="fragment"><code class="php">// Equivalent of $usersService = $container->get("UsersService");
+$usersService = require "dic/UsersService.php";</code></pre>
+
+                        <div class="fragment">
+                            <p><code>dic/UsersService.php</code></p>
+                            <pre><code class="php">return new Service\UsersService(
+  require "dic/DBConnection.php"
+);</code></pre>
+                        </div>
+
+                        <div class="fragment">
+                            <p><code>dic/DBConnection.php</code></p>
+                            <pre><code class="php">return new PDO(
+  $_ENV["DB_CONNECTION"],
+  $_ENV["DB_USER"],
+  $_ENV["DB_PASS"],
+  [PDO::ATTR_PERSISTENT => true]
+);</code></pre>
+                        </div>
+                    </section>
+
+                    <section>
+                        <h2>Dependency Injection</h2>
+                        <h3>Give me the <code>UsersService</code> please! (using global functions)</h3>
+                        <pre class="fragment"><code class="php">// Equivalent of $usersService = $container->get("UsersService");
+$usersService = getUsersService();</code></pre>
+
+                        <div class="fragment">
+                            <p><code>dic.php</code></p>
+                            <pre><code class="php">function getUsersService() : Service\UsersService {
+  return new Service\UsersService(
+    getDBConnection()
+  );
+}
+
+function getDBConnection() : PDO {
+  return new PDO(
+    $_ENV["DB_CONNECTION"],
+    $_ENV["DB_USER"],
+    $_ENV["DB_PASS"],
+    [PDO::ATTR_PERSISTENT => true]
+  );
+}</code></pre>
+                        </div>
+                    </section>
+
+                    <section>
+                        <h2>Dependency Injection</h2>
+                        <h3>A more complex DI example</h3>
+                        <pre class="fragment"><code class="php">$deliveryGateway = require "dic/Service/DeliveryGateway.php";</code></pre>
+
+                        <div class="fragment">
+                            <p><code>dic/Service/DeliveryGateway.php</code></p>
+                            <pre><code class="php" style="font-size: 0.9em;">&lt;?php
+/**
+ * @return Service\Healthcare\Invoicing\HealthcareDeliveryGatewayInterface
+ */
+return new Service\Healthcare\Invoicing\CachingHealthcareDeliveryGateway(
+    new Service\Healthcare\Invoicing\WSHealthcareDeliveryGateway(
+        require "dic/Service/IDFFormatter.php",
+        $_ENV["ws_healthcare_endpoint"],
+        require "dic/Service/HealthcareBeneficiary.php"
+    ),
+    new Caching()
+);</code></pre>
+                        </div>
+                    </section>
+                </section>
+
+                <section>
+                    <h2>Performance checklist:</h2>
+                    <ul>
+                        <li>Do not depend on heavy libraries if there's a simple PHP way to do it.</li>
+                        <li class="fragment">Use Opcache</li>
+                        <li class="fragment">Avoid disk access</li>
+                        <li class="fragment">Use the correct algorithms/data structures</li>
+                        <li class="fragment">Profile your code (xhprof)</li>
+                        <li class="fragment">Use Apache + mod_php</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Demo / Benchmark</h2>
+
+                    <p>"Sample PHP 7.1 application" available at: <a href="https://github.com/patrickallaert/php-sample-application">https://github.com/patrickallaert/php-sample-application</a></p>
+                </section>
+
+                <section class="conclusions">
+                    <section>
+                        <h2>Conclusions</h2>
+
+                        <ul>
+                            <li class="fragment">Re-usability of code is achieved with libraries</li>
+                            <li class="fragment">Re-usability of concepts is achieved by adopting patterns</li>
+                            <li class="fragment">Today's PHP frameworks are not frameworks anymore, they are pre-glued loosy coupled <strong>components</strong> meant to be replaceable</li>
+                            <li class="fragment">"Less is more": Refactor your "framework-based" application to use the most suitable components that fits your needs.
+                                You will gain <strong>control</strong>, <strong>performance</strong> and <strong>maintenance</strong></li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <blockquote>It seems that perfection is attained not when there is nothing more to add, but when there is nothing more to remove.
+                        <br/><br/>Antoine de Saint Exupéry</blockquote>
+                    </section>
+
+                    <section>
+                        <img width="600" src="img/php-no-frameworks/tweet.png"/>
+                    </section>
+                </section>
+
+                <section class="thanks">
+                    <h2>Thanks</h2>
+
+                    <p>"Sample PHP 7.1 application" available at: <a href="https://github.com/patrickallaert/php-sample-application">https://github.com/patrickallaert/php-sample-application</a></p>
+
+                    <p>Don't forget to rate this talk on <a itemprop="discussionUrl" href="https://joind.in/talk/2be70">https://joind.in/talk/2be70</a></p>
+
+                    <h3>Stay in touch!</h3>
+                    <p><a href="https://twitter.com/patrick_allaert/">@patrick_allaert</a></p>
+                    <p><a href="mailto:patrickallaert@php.net">patrickallaert@php.net</a></p>
+                </section>
+            </div>
+        </div>
+
+        <script src="lib/js/head.min.js"></script>
+        <script src="js/reveal.js"></script>
+
+        <script>
+            // Full list of configuration options available at:
+            // https://github.com/hakimel/reveal.js#configuration
+            Reveal.initialize({
+                controls: false,
+                progress: true,
+                history: true,
+                center: true,
+                transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+                // Optional reveal.js plugins
+                dependencies: [
+                    { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+                    { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+                    { src: 'plugin/zoom-js/zoom.js', async: true },
+                    { src: 'plugin/notes/notes.js', async: true }
+                ]
+            });
+        </script>
+
+    </body>
+</html>

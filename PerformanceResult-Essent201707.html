@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+
+        <title>Results of performance test</title>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+
+        <link rel="stylesheet" href="css/my.css">
+        <link rel="stylesheet" href="css/theme/league.css" id="theme">
+
+        <!-- Printing and PDF exports -->
+        <script>
+            var link = document.createElement( 'link' );
+            link.rel = 'stylesheet';
+            link.type = 'text/css';
+            link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+            document.getElementsByTagName( 'head' )[0].appendChild( link );
+        </script>
+
+        <script>
+            if (window.location.protocol != "file:") {
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-2757442-2', 'auto');
+                ga('send', 'pageview');
+            }
+        </script>
+
+        <!--[if lt IE 9]>
+        <script src="lib/js/html5shiv.js"></script>
+        <![endif]-->
+    </head>
+
+    <body>
+        <div class="reveal">
+            <div class="slides">
+                <section class="first">
+                    <h1>Results of performance test</h1>
+                </section>
+
+                <section>
+                    <h2>Initial goal is running 15 UP / 300 TC1 CUPQ spread in 1 hour of time.</h2>
+                </section>
+
+                <section>
+                    <p>Running for a shorter time first to see how it goes: 5 UP / 100 TC1 in 20 minutes.</p>
+                    <img class="fragment" src="https://media.giphy.com/media/3o85xJY1FaLzqeoBGw/giphy.gif">
+                </section>
+
+                <section>
+                    <ul>
+                        <li>Load average on CRM box: 96 ... <span class="fragment">and discovering that dev12's CRM box has only 2 vCPU (like devint01).</span></li>
+                        <li class="fragment">To support that load, we should therefor have a cluster of <strong>minimum</strong> 48 load balanced m3.large (current type) instances.</li>
+                        <li class="fragment">Some processed were killed or denied to launch because of OOM (Out Of Memory).</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Errors encountered:</h2>
+                    <ul>
+                        <li>ssh connection closed (Linux Kernel reclaiming memory).</li>
+                        <li class="fragment"><code>$ top: Cannot allocate memory</code> (also with "ls").</li>
+                        <li class="fragment">Login in while test is run creates failed requests and take 1.6 minutes: <img src="img/essent/dwp_login.png"></li>
+                        <li class="fragment">In JMeter results: many failed requests.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>On database server:</h2>
+
+                    <p class="fragment">CPU load increased, but in a <strong>very manageable way</strong>.</p>
+                    <p class="fragment"><strong>However</strong>, the network bandwidth (out) reached 10Mb/s for several minutes!</p>
+                </section>
+
+                <section>
+                    <h2>Analysis of MySQL slow query log:</h2>
+
+                    <p>Indexes will have to be created in order to improve the various queries involved.</p>
+                    <p>17 individual queries are not</p>
+                    <p>Top slowest query:</p>
+                    <code style="font-size: 0.6em;"><pre>
+# Attribute    pct   total     min     max     avg     95%  stddev  median
+# ============ === ======= ======= ======= ======= ======= ======= =======
+# Count          6     227
+# Exec time     69  15496s   661ms    121s     68s    107s     40s     80s
+# Lock time      0      2s       0   383ms     8ms    46ms    37ms   167us
+# Rows sent      0     226       0       1    1.00    0.99    0.07    0.99
+# Rows examine  13  15.48M       0  70.57k  69.81k  68.96k   4.57k  68.96k
+# Query size     8 130.13k     587     587     587     587       0     587
+# Query_time distribution
+#  10ms
+# 100ms  ################
+#    1s  ####
+#  10s+  ################################################################
+SELECT COUNT(ql.id) AS results FROM suitecrm.aos_products_quotes ql
+JOIN addresses_aos_products_quotes aql ON aql.aos_products_quote_id = ql.id
+JOIN addresses a ON a.id = aql.address_id
+WHERE a.address_street = '' AND a.address_number = ''
+AND ql.parent_type = 'AOS_Contracts'
+AND ql.product_type_c != '' AND ql.product_type_c IN ('ELEC', 'GAS')
+AND ql.deleted = 0 AND ql.contract_line_status_c IN ('ACTIVE', 'TO BE ACTIVATED', 'WAITING FOR START DATE')
+                    </pre></code>
+                </section>
+
+                <section>
+                    <h2>Profiling the CRM</h2>
+
+                    <section>
+                        <h3>Result from profiling a heavy request (CUPQ (32.52 seconds)):</h3>
+                        <table style="font-size: 0.5em;">
+                            <tr>
+                                <th>Function</th><th># Calls</th><th>Incl. Wall Time (microsec)</th><th>IWall%</th>
+                            </tr>
+                            <tr>
+                                <td>mysqli_query</td><td>452</td><td>22,504,615</td><td>69.2%</td>
+                            </tr>
+                            <tr>
+                                <td>SuiteCRM\FLW_Flows\Response\Model::getFields</td><td>106</td><td>2,536,059</td><td>7.8%</td>
+                            </tr>
+                            <tr>
+                                <td>SoapClient::__doRequest</td><td>1</td><td>1,875,710</td><td>5.8%</td>
+                            </tr>
+                            <tr>
+                                <td>spl_autoload_call</td><td>461</td><td>1,565,391</td><td>4.8%</td>
+                            </tr>
+                            <tr>
+                                <td>preg_grep</td><td>107</td><td>1,389,875</td><td>4.3%</td>
+                            </tr>
+                            <tr>
+                                <td>strpos</td><td>12,143</td><td></td><td></td>
+                            </tr>
+                            <tr>
+                                <td>to_html</td><td>4,418</td><td></td><td></td>
+                            </tr>
+                            <tr>
+                                <td>array_search</td><td>4,411</td><td></td><td></td>
+                            </tr>
+                            <tr>
+                                <td>strcmp</td><td>4,313</td><td></td><td></td>
+                            </tr>
+                            <tr>
+                                <td>count</td><td>2,868</td><td></td><td></td>
+                            </tr>
+                            <tr>
+                                <td>htmlentities</td><td>1,814</td><td></td><td></td>
+                            </tr>
+                            <tr>
+                                <td>preg_match</td><td>1,604</td><td></td><td></td>
+                            </tr>
+                        </table>
+
+                    </section>
+
+                    <section>
+                        <h3>Result from profiling a baseline request (health ping (61ms)):</h3>
+                        <table style="font-size: 0.7em;">
+                            <tr>
+                                <th>Function</th><th># Calls</th><th>Incl. Wall Time (microsec)</th><th>IWall%</th>
+                            </tr>
+                            <tr>
+                                <td>load::entryPoint.php</td><td>1</td><td>30,182</td><td>49.8%</td>
+                            </tr>
+                            <tr>
+                                <td>MonologLogger::__construct</td><td>1</td><td>9,212</td><td>15.2%</td>
+                            </tr>
+                            <tr>
+                                <td>spl_autoload_call</td><td>116</td><td>8,307</td><td>13.7%</td>
+                            </tr>
+                            <tr>
+                                <td>SuiteCRM\Api\Core\RouteLoader::configureRoutes</td><td>1</td><td>4,650</td><td>7.7%</td>
+                            </tr>
+                        </table>
+                    </section>
+                </section>
+            </div>
+        </div>
+
+        <script src="lib/js/head.min.js"></script>
+        <script src="js/reveal.js"></script>
+
+        <script>
+            // Full list of configuration options available at:
+            // https://github.com/hakimel/reveal.js#configuration
+            Reveal.initialize({
+                controls: false,
+                progress: true,
+                history: true,
+                center: true,
+                transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+                // Optional reveal.js plugins
+                dependencies: [
+                    { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+                    { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+                    { src: 'plugin/zoom-js/zoom.js', async: true },
+                    { src: 'plugin/notes/notes.js', async: true }
+                ]
+            });
+        </script>
+
+    </body>
+</html>
