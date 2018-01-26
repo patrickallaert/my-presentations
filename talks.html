@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+
+        <title>Talks by Patrick Allaert</title>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+
+        <link rel="stylesheet" href="css/my.css">
+        <link rel="stylesheet" href="css/theme/league.css" id="theme">
+
+        <!-- Printing and PDF exports -->
+        <script>
+            var link = document.createElement( 'link' );
+            link.rel = 'stylesheet';
+            link.type = 'text/css';
+            link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+            document.getElementsByTagName( 'head' )[0].appendChild( link );
+        </script>
+
+        <script>
+            if (window.location.protocol != "file:") {
+                (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+                ga('create', 'UA-2757442-2', 'auto');
+                ga('send', 'pageview');
+            }
+        </script>
+
+        <!--[if lt IE 9]>
+        <script src="lib/js/html5shiv.js"></script>
+        <![endif]-->
+    </head>
+
+    <body class="talks-summary">
+        <div class="reveal">
+            <div class="slides">
+                <section class="first">
+                    <h1>Talks by Patrick Allaert:</h1>
+                    <ul>
+                        <li><a href="Advanced-debugging-techniques-for-PHP-PHPBenelux2018.html">Advanced debugging techniques for PHP - PHPBenelux 2018</a></li>
+                        <li><a href="Reaching-25000-Requests-sec-NEPHP-2017.html">Reaching 25000 requests/sec - Northeast PHP 2017</a></li>
+                        <li><a href="PHP-Data-Structures-NEPHP-2017.html">PHP Data Structures - Northeast PHP 2017</a></li>
+                        <li><a href="Advanced-debugging-techniques-for-PHP-NortheastPHP2017.html">Advanced debugging techniques for PHP - Northeast PHP 2017</a></li>
+                        <li><a href="Advanced-debugging-techniques-for-PHP-BrusselsPHP.html">Advanced debugging techniques for PHP - BrusselsPHP 2017</a></li>
+                        <li><a href="PHP-Without-Frameworks-PHPSrbija-2017.html">PHP without Frameworks - PHPSrbija 2017</a></li>
+                        <li><a href="Advanced-debugging-techniques-for-PHP-DrupalCon2017.html">Advanced debugging techniques for PHP - DrupalCon Baltimore 2017</a></li>
+                        <li><a href="Advanced-debugging-techniques-for-PHP-PHPKonf2017.html">Advanced debugging techniques for PHP - PHPKonf 2017</a></li>
+                        <li><a href="PHP-Without-Frameworks-PHPBenelux-2017.html">PHP without Frameworks - PHPBenelux 2017</a></li>
+                    </ul>
+                </section>
+            </div>
+        </div>
+
+        <script src="lib/js/head.min.js"></script>
+        <script src="js/reveal.js"></script>
+
+        <script>
+            // Full list of configuration options available at:
+            // https://github.com/hakimel/reveal.js#configuration
+            Reveal.initialize({
+                controls: false,
+                progress: true,
+                history: true,
+                center: true,
+                transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+                // Optional reveal.js plugins
+                dependencies: [
+                    { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+                    { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+                    { src: 'plugin/zoom-js/zoom.js', async: true },
+                    { src: 'plugin/notes/notes.js', async: true }
+                ]
+            });
+        </script>
+
+    </body>
+</html>
